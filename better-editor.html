@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        var globalParams = new URLSearchParams(window.location.search);
+        var slideId = 1;
+        var presentationSlideCount = -1;
+        var isSlimCodeEdited = false;
+
+        function getSlideSlimCode() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "slide.php");
+
+            const params = new URLSearchParams();
+            params.set("slide-id", slideId);
+            params.set("presentation", globalParams.get("presentation"));
+            xhr.params = params;
+
+            xhr.onload = function () {
+                var data = JSON.parse(this.response);
+                var slimCode = document.createElement("textarea");
+                slimCode.id = "textarea-code";
+                slimCode.setAttribute("rows", "15");
+                slimCode.setAttribute("cols", "60");
+                slimCode.oninput = onCodeEdit;
+                slimCode.value = data.slimCode;
+                document.getElementById("slide-slim-code").innerHTML = "";
+                document.getElementById("slide-slim-code").append(slimCode);
+                getSlidePreview();
+            }
+            xhr.send();
+        }
+        
+        function getSlidePreview() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "slide-preview.php");
+
+            const params = new URLSearchParams();
+            params.set("slide-id", slideId);
+            params.set("presentation", globalParams.get("presentation"));
+            params.set("code", document.getElementById("textarea-code").value);
+            xhr.params = params;
+            
+            xhr.onload = function () {
+                var data = JSON.parse(this.response);                
+                var previewElement = document.createElement("embed");
+                previewElement.setAttribute("type", "text/html");
+                previewElement.setAttribute("src", data.previewLocation);
+                previewElement.setAttribute("width", "500");
+                previewElement.setAttribute("height", "500");
+                document.getElementById("slide-preview").innerHTML = "";
+                document.getElementById("slide-preview").append(previewElement);
+            }
+            xhr.send();
+        }
+
+        function saveSlimCode() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "save-slide.php");
+
+            const params = new URLSearchParams();
+            params.set("slide-id", slideId);
+            params.set("presentation", globalParams.get("presentation"));
+            params.set("code", document.getElementById("textarea-code").value);
+            xhr.params = params;
+            
+            xhr.onload = function () {
+                var data = JSON.parse(this.response); 
+                getSlidePreview();
+                isSlimCodeEdited = false;
+                refreshButtons();
+            }
+            xhr.send();
+        }
+
+        function updateSlideCount() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "slide-count.php");
+
+            const params = new URLSearchParams();
+            params.set("presentation", globalParams.get("presentation"));
+            xhr.params = params;
+            
+            xhr.onload = function () {
+                var data = JSON.parse(this.response);   
+                presentationSlideCount = data.count;
+                refreshButtons();
+            }
+            xhr.send();
+        }
+
+        function createNewSlideRequest() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "new-slide.php");
+
+            const params = new URLSearchParams();
+            params.set("presentation", globalParams.get("presentation"));
+            xhr.params = params;
+            
+            xhr.onload = function () {
+                var data = JSON.parse(this.response);  
+                getSlideSlimCode(); 
+                updateSlideCount();
+                refreshButtons();
+            }
+            xhr.send();
+        }
+        function getFullPresentationRequest() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "new-slide.php");
+
+            const params = new URLSearchParams();
+            params.set("presentation", globalParams.get("presentation"));
+            xhr.params = params;
+            
+            xhr.onload = function () {
+                var data = JSON.parse(this.response);
+                // TODO
+            }
+            xhr.send();
+        }
+
+        function downloadPresentation() {
+            getFullPresentationRequest();
+        }
+
+        function onSlideChange() {
+            getSlideSlimCode();
+            isSlimCodeEdited = false;
+            refreshButtons();
+        }
+        function nextSlide() {
+            slideId ++;
+            onSlideChange();
+        }
+        function previousSlide() {
+            slideId --;
+            onSlideChange();
+        }
+
+        function preview() {
+            getSlidePreview();
+        }
+
+        function createNewSlide() {
+            createNewSlideRequest();
+            onSlideChange();
+        }
+
+        function refreshButtons() {
+            if (slideId == 1) {
+                document.getElementById("previous-slide").setAttribute("disabled", "true");
+            } else {
+                document.getElementById("previous-slide").removeAttribute("disabled");
+            }
+            if (slideId >= presentationSlideCount) {
+                document.getElementById("next-slide").setAttribute("disabled", "true");
+            } else {
+                document.getElementById("next-slide").removeAttribute("disabled");
+            }
+            if (!isSlimCodeEdited) {
+                document.getElementById("save").setAttribute("disabled", "true");
+            } else {
+                document.getElementById("save").removeAttribute("disabled");
+            }
+        }
+
+        function init() {
+            document.getElementById("next-slide").onclick = nextSlide;
+            document.getElementById("previous-slide").onclick = previousSlide;
+            document.getElementById("preview").onclick = preview;
+            document.getElementById("save").onclick = saveSlimCode;
+            document.getElementById("new-slide").onclick = createNewSlide;
+            document.getElementById("download-presentation").onclick = downloadPresentation;
+            updateSlideCount();
+            onSlideChange();
+        }
+
+        function onCodeEdit() {
+            isSlimCodeEdited = true;
+            refreshButtons();
+        }
+
+        window.onload = init;
+    </script>
+    
+    <button id="previous-slide">Previous Slide</button>
+    <button id="next-slide">Next Slide</button>
+    <button id="preview">Preview</button>
+    <button id="back"> <a href="better-main.html">Back</a></button>
+    <button id="save">Save</button>
+    <button id="new-slide">New Slide</button>
+
+    <br>
+
+    <button id="download-presentation">Download Presentation</button>
+
+    <div id="slide-slim-code"></div>
+    <div id="slide-preview"></div>
+</body>
+</html>

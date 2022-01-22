@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+
+        var globalParams = new URLSearchParams(window.location.search);
+        globalParams = Array.from((acc,key) => ({ ...acc, [key]: globalParams.get(key)}), {});
+        console.log(globalParams);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "slide.php");
+
+        const params = new URLSearchParams();
+        params.set("slide-id", "1");
+        params.set("presentation", globalParams["presentation"]);
+        target.search = params.toString();
+
+        xhr.params = params;
+
+        console.log("here");
+        
+        xhr.onload = function () {
+            var data = JSON.parse(this.response);
+            console.log(data);
+
+            var list = document.createElement("ul");
+            for (let presentationData of data) {
+                var presentationElement = document.createElement("li");
+                
+                var innerLink = document.createElement("a");
+                innerLink.setAttribute("href", "editor.html#" + presentationData);
+                innerLink.text = presentationData;
+
+                presentationElement.append(innerLink);
+                
+                list.appendChild(presentationElement);
+            }
+            document.getElementById("presentations-list").append(list);
+        }
+        xhr.send();
+    </script>
+    
+
+    <form id="foo" method="get" action="editor.php">
+        <input type="hidden" name="presentationName" value=<?php echo $_GET["presentationName"] ?> />
+        <input type="hidden" name="slide" value= <?php echo ($_GET["slide"]-1) ?> />
+        <input type="submit" value="Previous Slide" <?php if($_GET["slide"]==0){echo "disabled";}?>/>
+    </form>
+
+    <form id="foo" method="get" action="editor.php">
+        <input type="hidden" name="presentationName" value=<?php echo $_GET["presentationName"] ?> />
+        <input type="hidden" name="slide" value= <?php echo ($_GET["slide"]+1) ?> />
+        <input type="submit" value="Next Slide"/>
+    </form>
+
+    <form id="foo" method="get" action="preview.php">
+
+        <textarea rows = "15" cols = "60" name = "content">
+<?php echo $_GET["content"] ?>
+         </textarea><br>
+
+    <!-- <input type="text" name="content" value=<?php echo "\"".$_GET["content"]."\"" ?> /> -->
+
+
+        <input type="hidden" name="presentationName" value=<?php echo $_GET["presentationName"] ?> />
+        <input type="hidden" name="slide" value= <?php echo $_GET["slide"] ?> />
+        <input type="submit" value="Preview"/>
+    </form>
+
+</body>
+</html>

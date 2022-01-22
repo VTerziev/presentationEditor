@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="presentations-list"></div> 
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "presentations-list.php");
+        console.log("here");
+        
+        xhr.onload = function () {
+            var data = JSON.parse(this.response);
+            console.log(data);
+
+            var list = document.createElement("ul");
+            for (let presentationData of data) {
+                var presentationElement = document.createElement("li");
+                
+                var innerLink = document.createElement("a");
+                innerLink.setAttribute("href", "better-editor.html?presentation=" + presentationData);
+                innerLink.text = presentationData;
+
+                presentationElement.append(innerLink);
+                
+                list.appendChild(presentationElement);
+            }
+            document.getElementById("presentations-list").append(list);
+        }
+        xhr.send();
+    </script>
+    
+</body>
+</html>
