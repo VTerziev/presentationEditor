@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="main-styles.css">
+</head>
 <body>
     <script>
         var canUploadFile = false;
@@ -15,9 +19,10 @@
 
                 document.getElementById("presentations-list").innerHTML = "";
 
-                var list = document.createElement("ul");
+                var list = document.createElement("div");
                 for (let presentationData of data) {
-                    var presentationElement = document.createElement("li");
+                    var presentationElement = document.createElement("div");
+                    presentationElement.id = "presentation";
                     
                     var innerLink = document.createElement("a");
                     innerLink.setAttribute("href", "better-editor.html?presentation=" + presentationData);
@@ -25,7 +30,7 @@
 
                     presentationElement.append(innerLink);
                     
-                    list.appendChild(presentationElement);
+                    list.append(presentationElement);
                 }
                 document.getElementById("presentations-list").append(list);
             }
@@ -77,16 +82,38 @@
             
             getPresentationsRequest();
             refreshButtons();
+
+            uploadPresentationButton = document.getElementById('presentationFile');
+            fileChosen = document.getElementById('file-chosen');
+            uploadPresentationButton.addEventListener('change', function(){
+                fileChosen.textContent = this.files[0].name
+            })
+
         }
         window.onload = init;
+        
     </script>
-
+    <div class="section-title">
+        <h1>Presentations</h1>
+    </div>
     <div id="presentations-list"></div> 
 
     <div>
-        <input type="file" id="presentationFile" name="presentationFile">
-        <input type="text" id="presentationName" name="presentationName">
-        <button id="upload-presentation" type="submit">Upload</button>    
+        <div class="section-title">
+            <h1>Upload Presentation</h1>
+        </div>
+        <div class="input-element">
+            <input type="file" id="presentationFile" name="presentationFile" hidden/>
+            <label for="presentationFile">Choose file</label>
+            <span id="file-chosen">No file chosen</span>    
+        </div>
+        <div class="input-element">
+            <label for="presentationName">Name </label>
+            <input type="text" id="presentationName" name="presentationName">
+        </div>
+        <div class="input-element">
+            <button id="upload-presentation" type="submit">Upload</button>   
+        </div>        
     </div>
 
 </body>

@@ -1,0 +1,20 @@
+.editor {
+    width: 100%;
+    text-align: center;
+}
+.editor-panel {
+    display: inline-block;
+    margin: auto;
+    padding: 20px;
+}
+
+.button-row {
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.button-row button {
+    display: inline-block;
+    margin: auto;
+}

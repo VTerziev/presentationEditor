@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="editor-styles.css">
+    </head>      
 <body>
     <script>
         var globalParams = new URLSearchParams(window.location.search);
@@ -20,8 +24,8 @@
                 var data = JSON.parse(this.response);
                 var slimCode = document.createElement("textarea");
                 slimCode.id = "textarea-code";
-                slimCode.setAttribute("rows", "15");
-                slimCode.setAttribute("cols", "60");
+                slimCode.setAttribute("rows", "50");
+                slimCode.setAttribute("cols", "90");
                 slimCode.oninput = onCodeEdit;
                 slimCode.value = data.slimCode;
                 document.getElementById("slide-slim-code").innerHTML = "";
@@ -46,8 +50,8 @@
                 var previewElement = document.createElement("embed");
                 previewElement.setAttribute("type", "text/html");
                 previewElement.setAttribute("src", data.previewLocation);
-                previewElement.setAttribute("width", "500");
-                previewElement.setAttribute("height", "500");
+                previewElement.setAttribute("width", "756");
+                previewElement.setAttribute("height", "756");
                 document.getElementById("slide-preview").innerHTML = "";
                 document.getElementById("slide-preview").append(previewElement);
             }
@@ -107,7 +111,7 @@
         }
         function getFullPresentationRequest() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "new-slide.php");
+            xhr.open("POST", "full-presentation.php");
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
@@ -183,19 +187,28 @@
 
         window.onload = init;
     </script>
+
+    <div class="section-title">
+        <h1>Editor</h1>
+    </div>
     
-    <button id="previous-slide">Previous Slide</button>
-    <button id="next-slide">Next Slide</button>
-    <button id="preview">Preview</button>
-    <button id="back"> <a href="better-main.html">Back</a></button>
-    <button id="save">Save</button>
-    <button id="new-slide">New Slide</button>
+    <div class="button-row">
+        <button id="previous-slide">Previous Slide</button>
+        <button id="next-slide">Next Slide</button>
+        <button id="preview">Preview</button>
+        <button id="back"> <a href="better-main.html">Back</a></button>
+        <button id="new-slide">New Slide</button>    
+    </div>
 
-    <br>
+    <div class="editor">
+        <div class="editor-panel" id="slide-slim-code"></div>
+        <div class="editor-panel" id="slide-preview"></div>    
+    </div>
 
-    <button id="download-presentation">Download Presentation</button>
 
-    <div id="slide-slim-code"></div>
-    <div id="slide-preview"></div>
+    <div class="button-row">
+        <button id="save">Save</button>
+        <button id="download-presentation">Download Presentation</button>    
+    </div>
 </body>
 </html>

@@ -1,0 +1,32 @@
+html, body {margin: 0; height: 100%;}
+body {
+    background: #289; 
+    background: #045 linear-gradient(#289, #045) no-repeat fixed; color: #dff; }
+
+h1, h2 {text-align: center; margin: 0;}
+
+
+button {
+    margin: 10px;
+    background-color: rgb(75,0,130);
+    padding: 5px;
+    font-family: sans-serif;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button a {
+    color: white;
+    text-decoration: none; 
+}
+
+
+button:disabled, button[disabled] {
+    background: rgb(75,0,130, 0.3);
+    cursor: auto;
+}
+
+button:hover {
+    background: rgb(75,0,130, 0.5);
+}
