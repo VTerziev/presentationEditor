@@ -13,7 +13,7 @@
 
         function getSlideSlimCode() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "slide.php");
+            xhr.open("GET", "php/slide.php");
 
             const params = new URLSearchParams();
             params.set("slide-id", slideId);
@@ -37,7 +37,7 @@
         
         function getSlidePreview() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "slide-preview.php");
+            xhr.open("GET", "php/slide-preview.php");
 
             const params = new URLSearchParams();
             params.set("slide-id", slideId);
@@ -60,7 +60,7 @@
 
         function saveSlimCode() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "save-slide.php");
+            xhr.open("POST", "php/save-slide.php");
 
             const params = new URLSearchParams();
             params.set("slide-id", slideId);
@@ -79,7 +79,7 @@
 
         function updateSlideCount() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "slide-count.php");
+            xhr.open("GET", "php/slide-count.php");
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
@@ -95,7 +95,7 @@
 
         function createNewSlideRequest() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "new-slide.php");
+            xhr.open("POST", "php/new-slide.php");
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
@@ -111,7 +111,7 @@
         }
         function getFullPresentationRequest() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "full-presentation.php");
+            xhr.open("POST", "php/full-presentation.php");
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
