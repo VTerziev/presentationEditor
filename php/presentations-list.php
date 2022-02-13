@@ -11,8 +11,7 @@
     $file = new File($db);
 
     $result = $file->read();
-    $num = $result->rowCount();
-    echo json_encode($num);
+    $num = $result->rowCount(); 
 
     if($num > 0) {
       $data = array();

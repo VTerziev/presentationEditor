@@ -6,7 +6,7 @@
 
     // Properties
     public $fileName;
-    public $slides;
+    public $content;
 
     // Constructor with DB
     public function __construct($db) {
@@ -50,12 +50,11 @@
 
   // Create file
   public function create() {
-    // Create Query
-    $query = 'INSERT INTO Files SET FileName = :fileName, Slides = :slides';
+    $query = 'INSERT INTO Files SET FileName = :fileName, Content = :content';
     $stmt = $this->conn->prepare($query);
 
     $stmt-> bindParam(':fileName', $this->fileName);
-    $stmt-> bindParam(':slides', $this->slides);
+    $stmt-> bindParam(':content', $this->content);
 
     if($stmt->execute()) {
       return true;
@@ -67,13 +66,13 @@
 
   // Update file
   public function update() {
-    $query = 'UPDATE Files SET Slides = :slides WHERE FileName = :fileName';
+    $query = 'UPDATE Files SET Content = :content WHERE FileName = :fileName';
     $stmt = $this->conn->prepare($query);
 
-    $this->slides = htmlspecialchars(strip_tags($this->slides));
+    $this->content = htmlspecialchars(strip_tags($this->content));
     $this->fileName = htmlspecialchars(strip_tags($this->fileName));
 
-    $stmt-> bindParam(':slides', $this->slides);
+    $stmt-> bindParam(':content', $this->content);
     $stmt-> bindParam(':fileName', $this->fileName);
 
     if($stmt->execute()) {

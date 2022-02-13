@@ -6,7 +6,8 @@
         "---"
     ];
 
-    echo json_encode(print_r($_FILES));
+	// echo json_encode($_POST['presentationName']);
+ //    echo json_encode(print_r($_FILES));
 
     $filename = $_FILES['file']['tmp_name'];
 	$myfile = fopen($filename, "r") or die("Unable to open file!");
@@ -19,8 +20,8 @@
     $db = $database->connect();
 
     $file = new File($db);
-    $file->fileName = $_FILES['file']['name'];
-    $file->slides = $content;
+    $file->fileName = $_POST['presentationName'];
+    $file->content = $content;
     $result = $file->create();
 
 	fclose($myfile);
