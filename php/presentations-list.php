@@ -1,4 +1,28 @@
 <?php
-    $data = ["Presentation A", "Presentation B", "Presentation C"];
+    // header('Access-Control-Allow-Origin: *');
+    // header('Content-Type: application/json');
+
+    include_once 'config/database.php';
+    include_once 'models/files.php';
+
+    $database = new Database();
+    $db = $database->connect();
+
+    $file = new File($db);
+
+    $result = $file->read();
+    $num = $result->rowCount();
+    echo json_encode($num);
+
+    if($num > 0) {
+      $data = array();
+      
+      while($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        extract($row);
+        array_push($data, $FileName);
+      }
+    } else {
+      $data = ["Presentation A", "Presentation B", "Presentation C"];
+    }
     echo json_encode($data);
 ?>
