@@ -27,23 +27,29 @@ function getSlideSlimCode() {
 }
 
 function getSlidePreview() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "php/slide-preview.php");
+    // xhr.open("POST", "php/slide-preview.php");
 
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:1337");
     const params = new URLSearchParams();
     params.set("slide-id", slideId);
     params.set("presentation", globalParams.get("presentation"));
     params.set("code", document.getElementById("textarea-code").value);
-    
+
     xhr.onload = function () {
-        var data = JSON.parse(this.response);                
-        var previewElement = document.createElement("embed");
-        previewElement.setAttribute("type", "text/html");
-        previewElement.setAttribute("src", data.previewLocation);
+        var previewElement = document.createElement("iframe");
         previewElement.setAttribute("width", "756");
         previewElement.setAttribute("height", "756");
+        // var data = JSON.parse(this.response);
+        // previewElement.setAttribute("srcdoc", data.preview);
+        // previewElement.setAttribute("srcdoc", this.repsonse);
+        // previewElement.setAttribute("src", "http://localhost:1337");
         document.getElementById("slide-preview").innerHTML = "";
         document.getElementById("slide-preview").append(previewElement);
+
+        previewElement.contentWindow.document.open();
+        previewElement.contentWindow.document.write(this.response);
+        previewElement.contentWindow.document.close();
     }
     xhr.send(params);
 }
