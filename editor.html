@@ -95,8 +95,10 @@
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
+            params.set("after-slide", slideId);
             
             xhr.onload = function () {
+                slideId ++;
                 var data = JSON.parse(this.response);  
                 getSlideSlimCode(); 
                 updateSlideCount();
