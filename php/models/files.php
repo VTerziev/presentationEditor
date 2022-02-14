@@ -119,8 +119,7 @@
     public function merge_slides($slides) {
       $text = "";
       foreach($slides as $slide) {
-        $text  = $text . '
-' . $slide;
+        $text  = $text . "\n" . $slide;
       }
       $this->content = $text;
     }
