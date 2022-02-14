@@ -14,6 +14,7 @@
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "php/presentations-list.php");
             xhr.onload = function () {
+                console.log("getting the list of presentations");
                 var data = JSON.parse(this.response);
                 console.log(data);
 
@@ -53,8 +54,6 @@
             refreshButtons();
 
             xhr.onload = function () {
-                var data = JSON.parse(this.response);
-                console.log(data);
                 getPresentationsRequest();
             }
             xhr.send(formData);
