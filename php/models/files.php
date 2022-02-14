@@ -32,7 +32,7 @@
 
       $row = $stmt->fetch(PDO::FETCH_ASSOC);
       $this->fileName = $row['FileName'];
-      $this->slides = $row['Content'];
+      $this->content = $row['Content'];
     }
 
     // Create file
@@ -95,7 +95,8 @@
   //   }
 
     public function split_slides() {
-      $lines = preg_split("/\r\n|\n|\r/", $this->slides);
+      // "/\r\n|\n|\r/"
+      $lines = preg_split("/\n/", $this->content);
 
       $slides = array();
       $curr_slide = "";
@@ -106,9 +107,17 @@
           }
           $curr_slide = $line;
         } else {
-          $curr_slide = $curr_slide . '\n' . $line;
+          $curr_slide = $curr_slide . $line;
         }
       }
       return $slides;
+    }
+
+    public function merge_slides($slides) {
+      $text = "";
+      foreach($slides as $slide) {
+        $text  = $text . $slide;
+      }
+      $this->content = $text;
     }
   }
