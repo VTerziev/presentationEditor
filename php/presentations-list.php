@@ -20,8 +20,6 @@
         extract($row);
         array_push($data, $FileName);
       }
-    } else {
-      $data = ["Presentation A", "Presentation B", "Presentation C"];
     }
     echo json_encode($data);
 ?>

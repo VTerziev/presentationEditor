@@ -21,66 +21,53 @@
       return $stmt;
     }
 
-  //   // Get single file
-  // public function read_single() {
-  //   // Create query
-  //   $query = 'SELECT
-  //         fileName,
-  //         slides
-  //       FROM
-  //         ' . $this->table . '
-  //     WHERE fileName = ?
-  //     LIMIT 0,1';
+    // Get single file
+    public function read_single() {
+      $query = 'SELECT * FROM Files WHERE FileName = :fileName LIMIT 1';
 
-  //     //Prepare statement
-  //     $stmt = $this->conn->prepare($query);
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(':fileName', $this->fileName);
 
-  //     // Bind fileName
-  //     $stmt->bindParam(1, $this->fileName);
+      $stmt->execute();
 
-  //     // Execute query
-  //     $stmt->execute();
-
-  //     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  //     // set properties
-  //     $this->fileName = $row['fileName'];
-  //     $this->slides = $row['slides'];
-  // }
-
-  // Create file
-  public function create() {
-    $query = 'INSERT INTO Files SET FileName = :fileName, Content = :content';
-    $stmt = $this->conn->prepare($query);
-
-    $stmt-> bindParam(':fileName', $this->fileName);
-    $stmt-> bindParam(':content', $this->content);
-
-    if($stmt->execute()) {
-      return true;
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $this->fileName = $row['FileName'];
+      $this->slides = $row['Content'];
     }
 
-    printf("Error: $s.\n", $stmt->error);
-    return false;
-  }
+    // Create file
+    public function create() {
+      $query = 'INSERT INTO Files SET FileName = :fileName, Content = :content';
+      $stmt = $this->conn->prepare($query);
 
-  // Update file
-  public function update() {
-    $query = 'UPDATE Files SET Content = :content WHERE FileName = :fileName';
-    $stmt = $this->conn->prepare($query);
+      $stmt-> bindParam(':fileName', $this->fileName);
+      $stmt-> bindParam(':content', $this->content);
 
-    $this->content = htmlspecialchars(strip_tags($this->content));
-    $this->fileName = htmlspecialchars(strip_tags($this->fileName));
+      if($stmt->execute()) {
+        return true;
+      }
 
-    $stmt-> bindParam(':content', $this->content);
-    $stmt-> bindParam(':fileName', $this->fileName);
-
-    if($stmt->execute()) {
-      return true;
+      printf("Error: $s.\n", $stmt->error);
+      return false;
     }
-    printf("Error: $s.\n", $stmt->error);
-    return false;
-  }
+
+    // Update file
+    public function update() {
+      $query = 'UPDATE Files SET Content = :content WHERE FileName = :fileName';
+      $stmt = $this->conn->prepare($query);
+
+      $this->content = htmlspecialchars(strip_tags($this->content));
+      $this->fileName = htmlspecialchars(strip_tags($this->fileName));
+
+      $stmt-> bindParam(':content', $this->content);
+      $stmt-> bindParam(':fileName', $this->fileName);
+
+      if($stmt->execute()) {
+        return true;
+      }
+      printf("Error: $s.\n", $stmt->error);
+      return false;
+    }
 
   // // Delete file
   // public function delete() {
@@ -106,4 +93,22 @@
 
   //   return false;
   //   }
+
+    public function split_slides() {
+      $lines = preg_split("/\r\n|\n|\r/", $this->slides);
+
+      $slides = array();
+      $curr_slide = "";
+      foreach($lines as $line) {
+        if (substr($line, 0, 7) === "= slide") {
+          if ($curr_slide != "") {
+            array_push($slides, $curr_slide);
+          }
+          $curr_slide = $line;
+        } else {
+          $curr_slide = $curr_slide . '\r\n' . $line;
+        }
+      }
+      return $slides;
+    }
   }
