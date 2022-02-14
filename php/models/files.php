@@ -119,7 +119,7 @@
     public function merge_slides($slides) {
       $text = "";
       foreach($slides as $slide) {
-        $text  = $text . "\r" . $slide;
+        $text  = $text . PHP_EOL . $slide;
       }
       $this->content = $text;
     }
