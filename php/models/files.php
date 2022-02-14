@@ -96,7 +96,7 @@
 
     public function split_slides() {
       // "/\r\n|\n|\r/"
-      $lines = preg_split("/\n/", $this->content);
+      $lines = preg_split("/\r\n|\n|\r/", $this->content);
 
       $slides = array();
       $curr_slide = "";

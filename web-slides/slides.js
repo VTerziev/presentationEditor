@@ -1,5 +1,6 @@
 var fs = require('fs');
 var { execSync } = require('child_process');
+const express = require('express');
 var ensure = moduleName => {
 	var folders = ['.', '..'].map(e => `${e}/node_modules/${moduleName}`);
 	if (!folders.some(fs.existsSync)) {
@@ -110,25 +111,59 @@ function onError(e, meta) {
 	error = e;
 };
 
-var http = require('http');
-http.createServer(function (req, res) {
-	let filename = "CSS-2";
+const app = express();
+app.use(express.urlencoded()); // Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.json()); // Parse JSON bodies (as sent by API clients)
+app.post('/', (req, res) => {
+	// console.log(JSON.stringify(req.body));
+
+	// let filename = "CSS-2";
 
 	var layout = fs.readFileSync('./lectures/layout.slim', { encoding: 'utf8' });
-	var actual = fs.readFileSync(`./lectures/${filename}.slim`, { encoding: 'utf8' });
+	// var actual = fs.readFileSync(`./lectures/${filename}.slim`, { encoding: 'utf8' });
 
-	var actualHTML = render(actual);
+	console.log(`\n\nProcessing body:\n${req.body.code}\n`);
+
+	var actualHTML = render(req.body.code);
 	if (!error) {
-		var wholeHTML = slm.render(layout, { slides_html: actualHTML, title: filename });
+		var wholeHTML = slm.render(layout, { slides_html: actualHTML, title: req.body.presentation });
 
-		fs.writeFileSync(`./html/${filename}.html`, wholeHTML);
-		console.log(wholeHTML);
+		// fs.writeFileSync(`./html/${filename}.html`, wholeHTML);
+		// console.log(wholeHTML);
 
-		console.log(`\n Done: html/${filename}.html`);
+		console.log('Succes.');
 	}
 
 	// res.writeHead(200, {'Content-Type': 'text/plain'});
+	res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
 	res.write(wholeHTML);
 	res.end();
-}).listen(1337, "127.0.0.1");
-console.log('Server running at http://127.0.0.1:1337/');
+})
+
+app.listen(1337, () => {
+  console.log(`Server listening on port 1337`);
+})
+
+// var http = require('http');
+// http.createServer(function (req, res) {
+// 	let filename = "CSS-2";
+
+// 	var layout = fs.readFileSync('./lectures/layout.slim', { encoding: 'utf8' });
+// 	var actual = fs.readFileSync(`./lectures/${filename}.slim`, { encoding: 'utf8' });
+
+// 	var actualHTML = render(actual);
+// 	if (!error) {
+// 		var wholeHTML = slm.render(layout, { slides_html: actualHTML, title: filename });
+
+// 		fs.writeFileSync(`./html/${filename}.html`, wholeHTML);
+// 		// console.log(wholeHTML);
+
+// 		console.log(`\n Done: html/${filename}.html`);
+// 	}
+
+// 	// res.writeHead(200, {'Content-Type': 'text/plain'});
+// 	res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
+// 	res.write(wholeHTML);
+// 	res.end();
+// }).listen(1337, "127.0.0.1");
+// console.log('Server running at http://127.0.0.1:1337/');
