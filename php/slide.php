@@ -11,6 +11,6 @@
     $slides = $file->split_slides();
     // var_dump($slides);
     // echo 'slides[id] encoding = ' . mb_detect_encoding($slides[$id]);
-    $data = ["slimCode" => $slides[$_POST['slide-id']]];
+    $data = ["slimCode" => $slides[$_POST['slide-id']-1]];
     echo json_encode($data);
 ?>

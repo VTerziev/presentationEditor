@@ -5,16 +5,15 @@
     $database = new Database();
     $db = $database->connect();
 
-	echo json_encode($_POST);
     $file = new File($db);
     $file->fileName = $_POST['presentation'];
     $file->read_single();
 
     $slides = $file->split_slides();
-    $pos = $_POST['slide-id'];
+    $pos = $_POST['after-slide'];
 	$slides = array_merge(
             array_slice($slides, 0, $pos),
-            "",
+            array("= slide 'Slide Name'"),
             array_slice($slides, $pos)
         );
 	$file->merge_slides($slides);

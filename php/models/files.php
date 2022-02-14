@@ -110,13 +110,17 @@
           $curr_slide = $curr_slide . $line;
         }
       }
+      if ($curr_slide != "") {
+        array_push($slides, $curr_slide);
+      }
       return $slides;
     }
 
     public function merge_slides($slides) {
       $text = "";
       foreach($slides as $slide) {
-        $text  = $text . $slide;
+        $text  = $text . '
+' . $slide;
       }
       $this->content = $text;
     }
