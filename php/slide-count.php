@@ -5,10 +5,9 @@
     $database = new Database();
     $db = $database->connect();
 
-    echo json_encode($_POST);
-
     $file = new File($db);
-    $file->fileName = 'css-1';
+    $file->fileName = $_POST['presentation'];
     $file->read_single();
-    echo (sizeof($file->split_slides()));
+    $data = ["count" => sizeof($file->split_slides())];
+    echo json_encode($data);
 ?>
