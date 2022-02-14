@@ -1,14 +1,20 @@
 <?php
+	include_once 'config/database.php';
+    include_once 'models/files.php';
 
+    $id = 1;
 
-    $text = "= slide 'Използване на CSS' do
-    p Има 3 начина на използване на CSS:
-    list:
-    като стойност на style атрибута на html елемент (very bad) <xmp><a href=\"//google.com\" style=\"color:red\">Click Here</a></xmp>
-    като добавим style tag в HTML-a (обикновено в head-а) (not good) <xmp><style> a { color: red } </style></xmp>
-    като го линк-нете като външен файл (good) <xmp><link href=\"style.css\" rel=\"stylesheet\"></xmp>
-    ";
+	$database = new Database();
+    $db = $database->connect();
 
-    $data = ["slimCode" => $text];
+    // echo json_encode($_POST);
+
+    $file = new File($db);
+    $file->fileName = 'css-1';
+    $file->read_single();
+    $slides = $file->split_slides();
+    // var_dump($slides);
+    // echo 'slides[id] encoding = ' . mb_detect_encoding($slides[$id]);
+    $data = ["slimCode" => $slides[$id]];
     echo json_encode($data);
 ?>

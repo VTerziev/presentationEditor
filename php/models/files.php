@@ -106,7 +106,7 @@
           }
           $curr_slide = $line;
         } else {
-          $curr_slide = $curr_slide . '\r\n' . $line;
+          $curr_slide = $curr_slide . '\n' . $line;
         }
       }
       return $slides;
