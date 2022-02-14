@@ -79,10 +79,10 @@
 
         function updateSlideCount() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "php/slide-count.php");
+            xhr.open("POST", "php/slide-count.php");
 
             const params = new URLSearchParams();
-            params.set("presentation", globalParams.get("presentation"));
+            params.set("presentation", 'css-1'); //globalParams.get("presentation")
             xhr.params = params;
             
             xhr.onload = function () {
