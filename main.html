@@ -12,7 +12,7 @@
 
         function getPresentationsRequest() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "php/presentations-list.php");
+            xhr.open("POST", "php/presentations-list.php");
             xhr.onload = function () {
                 var data = JSON.parse(this.response);
                 console.log(data);

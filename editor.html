@@ -13,12 +13,11 @@
 
         function getSlideSlimCode() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "php/slide.php");
+            xhr.open("POST", "php/slide.php");
 
             const params = new URLSearchParams();
             params.set("slide-id", slideId);
             params.set("presentation", globalParams.get("presentation"));
-            xhr.params = params;
 
             xhr.onload = function () {
                 var data = JSON.parse(this.response);
@@ -32,18 +31,17 @@
                 document.getElementById("slide-slim-code").append(slimCode);
                 getSlidePreview();
             }
-            xhr.send();
+            xhr.send(params);
         }
         
         function getSlidePreview() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "php/slide-preview.php");
+            xhr.open("POST", "php/slide-preview.php");
 
             const params = new URLSearchParams();
             params.set("slide-id", slideId);
             params.set("presentation", globalParams.get("presentation"));
             params.set("code", document.getElementById("textarea-code").value);
-            xhr.params = params;
             
             xhr.onload = function () {
                 var data = JSON.parse(this.response);                
@@ -55,7 +53,7 @@
                 document.getElementById("slide-preview").innerHTML = "";
                 document.getElementById("slide-preview").append(previewElement);
             }
-            xhr.send();
+            xhr.send(params);
         }
 
         function saveSlimCode() {
@@ -66,7 +64,6 @@
             params.set("slide-id", slideId);
             params.set("presentation", globalParams.get("presentation"));
             params.set("code", document.getElementById("textarea-code").value);
-            xhr.params = params;
             
             xhr.onload = function () {
                 var data = JSON.parse(this.response); 
@@ -74,7 +71,7 @@
                 isSlimCodeEdited = false;
                 refreshButtons();
             }
-            xhr.send();
+            xhr.send(params);
         }
 
         function updateSlideCount() {
@@ -82,15 +79,14 @@
             xhr.open("POST", "php/slide-count.php");
 
             const params = new URLSearchParams();
-            params.set("presentation", 'css-1'); //globalParams.get("presentation")
-            xhr.params = params;
+            params.set("presentation", globalParams.get("presentation"));
             
             xhr.onload = function () {
                 var data = JSON.parse(this.response);   
                 presentationSlideCount = data.count;
                 refreshButtons();
             }
-            xhr.send();
+            xhr.send(params);
         }
 
         function createNewSlideRequest() {
@@ -99,7 +95,6 @@
 
             const params = new URLSearchParams();
             params.set("presentation", globalParams.get("presentation"));
-            xhr.params = params;
             
             xhr.onload = function () {
                 var data = JSON.parse(this.response);  
@@ -107,7 +102,7 @@
                 updateSlideCount();
                 refreshButtons();
             }
-            xhr.send();
+            xhr.send(params);
         }
         function getFullPresentationRequest() {
             var xhr = new XMLHttpRequest();
