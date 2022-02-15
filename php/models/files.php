@@ -96,27 +96,33 @@
 
     public function split_slides() {
       // "/\r\n|\n|\r/"
-      $lines = preg_split("/\n/", $this->content);
+      // var_dump($this->content);
+      $lines = preg_split("/\r\n|\n|\r/", $this->content);
 
       $slides = array();
       $curr_slide = "";
       foreach($lines as $line) {
+        if ($line === "\n") continue;
+
         if (substr($line, 0, 7) === "= slide") {
           if ($curr_slide != "") {
             array_push($slides, $curr_slide);
           }
           $curr_slide = $line;
         } else {
-          $curr_slide = $curr_slide . $line;
+          $curr_slide = $curr_slide . PHP_EOL . $line;
         }
       }
       if ($curr_slide != "") {
         array_push($slides, $curr_slide);
       }
+
+      // var_dump($slides);
       return $slides;
     }
 
     public function merge_slides($slides) {
+      // var_dump($slides);
       $text = "";
       foreach($slides as $slide) {
         $text  = $text . PHP_EOL . $slide;
